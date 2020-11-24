@@ -4,11 +4,49 @@ author: "Ayeshra Acharya"
 date: "11/24/2020"
 output: html_document
 ---
-Nepal data!
+Nepali children growth. CV. 
 
 ```{r}
-
-
-
-
+child_growth_df = 
+  read_csv("./data/nepalese_children.csv") %>%
+  mutate(
+    weight_cp = (weight>7)* (weight - 7)
+  )
 ```
+First, let's look at how well weight predicts arm circum? 
+```{r}
+child_growth_df %>%
+  ggplot(aes(x=weight,y=armc)) +
+  geom_point(alpha=0.3)
+```
+higher weight = higher armc at quick glance. 
+Maybe there is a line? 
+
+So we have to compare 3 models
+- Linear
+- One piece straight, allow change and then straight again 
+- Smooth curve 
+OK SO in the below problem, we are looking at how well weight predicts arm circum. 
+the predictor is weight. after ~
+```{r}
+linear_mod = lm(armc ~ weight, data = child_growth_df)
+pwlin_mod = lm(armc ~ weight + weight_cp, data = child_growth_df)
+smooth_mod = gam(armc ~ s(weight), data = child_growth_df)
+```
+
+Ok now let's fit the models we care about. 
+
+If we look at the 3 models, the linear model is straight line, pw lin model curves a little and then smooth model is a bit more squiggly. 
+-- Which is right one to use?
+
+CROSS VALIDATION PROCEDURE. 
+"Try to understand model fit using CV" 
+
+DO RMSE, violin plot of RMSEs. 
+This one is a lot closer than other one. We have to pick which model is best without really looking at p values. 
+LINEAR model does ok. PW does better, smooth does a little better.
+
+Which one to choose? PW lin model probably. 
+- Because there is a clear improvement from linear to PW. BUT it is not huge improvement from PW to smooth model. Interpreation for PW lin is more stragiht forward than smoot model. 
+- Smooth model is more correct but harder to interpret. 
+- Choice is not always super direct. Nuances exist. Tradeoffs exist. 
