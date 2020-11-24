@@ -150,6 +150,64 @@ anova(fit_null,fit_alt)
 broom::tidy()
 ``` 
 
+## Nest data, fit models 
+Is there an association between price and stars? Does this association differ by borough? 
+- We want different lines for each borough?
+- Can also study across room type. 
+- We can fit interaction terms! 
+Interactions are important, and complicated. 
 
+```{r}
+fit = lm(price ~ stars * borough + room_type * borough, data = nyc_airbnb)
+broom::tidy(fit)
+``` 
+First row: overall, stars has this effect. 
+Then, we get it for each as we go down the rows. 
+Looks like stars increasing does make a difference. 
+
+If you wanted to assess statistical sig, you can compare 1 fit that has itneraction and another that doesn't and ask if that's an improvement in model. Is it important contributor? 
+
+This is more exploratory but maybe easier to understand. What is the effect of sstars in Manhattan, stars in BK, stars in Bronx? 
+Build up from scratch a bit. 
+Results columns maps across columns. 
+In this we are fitting a model to each borough. Broom tidying is tidying all. 
+```{r}
+nyc_airbnb %>%
+  nest(data = -borough) %>%
+  mutate(
+    models = map(.x = data, ~lm(price ~ stars, data = .x)),
+    results = map(models,broom::tidy)
+  ) %>%
+  select(-data,-models) %>%
+  unnest(results)
+``` 
+As we can see from above, in Manhattan, there is a sig association between stars and price. 1 unit increase in stars = 43 dollar increase.
+In Bronx theres hardly any association between stars and price. 
+We can't say anything about whether models are different than each other bc we didn't fit this all in a join model. This is more exploratory. 
+
+
+
+Below, we are looking at what is the effect of stars on bronx, queens, bk, manhattan? What is the effect 
+
+```{r}
+nyc_airbnb %>%
+  nest(data = -borough) %>%
+  mutate(
+    models = map(.x = data, ~lm(price ~ stars, data = .x)),
+    results = map(models,broom::tidy)
+  ) %>%
+  select(-data,-models) %>%
+  unnest(results) %>%
+  filter(term != "(Intercept)") %>%
+  select(borough,term,estimate) %>%
+  pivot_wider(
+    names_from = borough, 
+    values_from = estimate
+  )
+``` 
+
+
+  )
+``` 
 
 
