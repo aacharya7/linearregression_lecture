@@ -187,7 +187,8 @@ We can't say anything about whether models are different than each other bc we d
 
 
 
-Below, we are looking at what is the effect of stars on bronx, queens, bk, manhattan? What is the effect 
+Below, we are looking at what is the effect of stars on bronx, queens, bk, manhattan? What is the effect of room type on each of these? Going from an entire apartment to private room will... 
+We are getting an idea of what's going on. 
 
 ```{r}
 nyc_airbnb %>%
@@ -206,8 +207,25 @@ nyc_airbnb %>%
   )
 ``` 
 
+Let's nest even more. What if we wanted to look at neighborhoods within Manhattan? Getting a separate model for each of the 32 neighborhoods in Manhattan.
+```{r}
+nyc_airbnb %>%
+  filter(borough == "Manhattan") %>%
+  nest(data = -neighborhood) %>%
+  mutate(
+    models = map(.x = data, ~lm(price ~ stars + room_type, data = .x)),
+    results = map(models,broom::tidy)
+  ) %>%
+  select(-data,-models) %>%
+  unnest(results) %>%
+  filter(str_detect(term,"room_type")) %>%
+  ggplot(aes(x = neighborhood, y = estimate)) +
+  geom_point() +
+  facet_wrap(. ~ term) +
+  theme(axis.text.x = element_text(angle = 70, vjust = 0.5, hjust =1))
+```
 
-  )
-``` 
+It worked!
+
 
 
