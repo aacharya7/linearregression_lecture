@@ -1,0 +1,75 @@
+---
+title: "bootstrap"
+author: "Ayeshra Acharya"
+date: "11/24/2020"
+output: github_document
+---
+
+## Bootstrapping 
+- Repeated sampling is important if you want to know something about population. Repeated sampling doesn't happen in reality. Repeated sampling CAN happen on a computer. O.o 
+
+- Bootstrapping: something you do over and over. Critical in modern statistics. Basic idea: use data that you have, treat as population and draw samples from that. 
+- Draw a bootstrap sample from the sample you have 
+- The bootstrap sample has same size as og. 
+With replacement 
+Draw sample form sample, variablity with replacement should mimic what happens in population. 
+- Some ppl are drawn 2x, some 0. 
+- Repeated sampling works! 
+## Revisit nyc airbnb
+
+
+```{r}
+data("nyc_airbnb")
+nyc_airbnb = 
+  nyc_airbnb %>% 
+  mutate(stars = review_scores_location / 2) %>% 
+  rename(
+    borough = neighbourhood_group,
+    neighborhood = neighbourhood) %>% 
+  filter(borough != "Staten Island") %>% 
+  select(price, stars, borough, neighborhood, room_type)
+```
+
+
+```{r}
+nyc_airbnb %>% 
+  ggplot(aes(x = stars, y = price)) + 
+  geom_point()
+```
+
+```{r}
+airbnb_boot_results = 
+  nyc_airbnb %>% 
+  filter(borough == "Manhattan") %>% 
+  drop_na(stars) %>% 
+  bootstrap(1000, id = "strap_number") %>% 
+  mutate(
+    models = map(.x = strap, ~lm(price ~ stars, data = .x)), 
+    results = map(models, broom::tidy)
+  ) %>% 
+  select(strap_number, results) %>% 
+  unnest(results) 
+airbnb_boot_results %>% 
+  group_by(term) %>% 
+  summarize(
+    mean_est = mean(estimate),
+    sd_est = sd(estimate)
+  )
+```
+
+Compare this to `lm`
+
+```{r}
+nyc_airbnb %>% 
+  filter(borough == "Manhattan") %>% 
+  drop_na(stars) %>% 
+  lm(price ~ stars, data = .) %>% 
+  broom::tidy()
+```
+
+```{r}
+airbnb_boot_results %>% 
+  filter(term == "stars") %>% 
+  ggplot(aes(x = estimate)) + 
+  geom_density()
+```

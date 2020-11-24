@@ -2,7 +2,7 @@
 title: "crossvalidation_nepaldata"
 author: "Ayeshra Acharya"
 date: "11/24/2020"
-output: html_document
+output: github_document
 ---
 Nepali children growth. CV. 
 
