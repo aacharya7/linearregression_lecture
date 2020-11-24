@@ -105,5 +105,35 @@ broom::tidy(fit)
 
 ``` 
 
-The difference now is that manhattan became the reference group and everythig else is being compared to it. 
+The difference now is that manhattan became the reference group and everythig else is being compared to it. We didn't change model in a fundamental way, we changed the reference group. 
+
+## Diagnostics 
+```{r}
+residuals(fit)
+```
+Up until now we have been using the above approach. We get super long vector. we want to get all variables and then tack onto that fitted variables that go along with it. So we will take advantage of modelr package. 
+```{r}
+modelr::add_residuals(nyc_airbnb,fit)
+``` 
+This dataset has a column for residual value. Residuals based on model fit. We can look at distributions of residuals, for instance. 
+```{r}
+nyc_airbnb %>%
+  modelr::add_residuals(fit) %>%
+  ggplot(aes(x=borough,y=resid)) + 
+  geom_violin() + 
+  ylim(-500,1500)
+
+nyc_airbnb %>%
+  modelr::add_residuals(fit) %>%
+  ggplot(aes(x=stars,y=resid)) +
+  geom_point() + 
+  facet_wrap(.~ borough)
+``` 
+What is this telling us?? 
+In Manhattan, as we get to higher star values, residuals get wider distributions. 4 5 stars in Manhattan, distribution of residuals in Manhattan gets higher. Same in Brooklyn. 
+Why does Queens have one outlier?? 
+Bronx doesn't have this issue 
+
+
+
 
