@@ -61,3 +61,49 @@ However, this below might be better.
 ```{r}
 broom::tidy(fit)
 ``` 
+This above is showing us: intercept, coefficient for stars, brooklyn to reference group, manhattan to reference group and queens to reference group. 
+How to interpret: One unit increase in stars, I expect the price to go up 32 dollars, keeping the borough fixed.
+Brooklyn room airbnb is 40 dollars more expensive than Bronx. Manhattan is 90 dollars more expensive, Queens is 13 dollars more expensive. 
+We can see p value and assess significance. 
+- Remember, this is a data frame. If we aren't interested in certain things, 
+we can omit. For example:
+```{r}
+broom::tidy(fit) %>%
+  select(-std.error,-statistic) %>%
+  mutate(
+    term = str_replace(term,"borough","Borough:")
+  ) %>%
+  knitr::kable()
+``` 
+## Be in control of factors.
+For example, borough is a character variable. Very often, this gets converted into a factor variable. You perserve text, but add another string... Idk but basically, Bronx is being used as the reference here. 
+- But what if, I want to make reference category the most common one? SO, I want reference group to be the one that has the most airbnb rentals. I want room type to be treated as factor variable, not alphabetical but most common .
+Mutate so that borough is factor and we are putting it in order of frequency of borough. 
+
+```{r}
+nyc_airbnb = 
+  nyc_airbnb %>%
+  mutate(
+    borough = fct_infreq(borough), 
+    room_type = fct_infreq(room_type)
+  )
+```
+
+Now, let's look at the plot again. 
+```{r}
+nyc_airbnb %>%
+  ggplot(aes(x=stars,y=price, color=borough)) +
+  geom_point()
+``` 
+It is very similar, but the ordering on axis has changed. Borough is in order of frequency of these things. 
+
+## Re fit the model 
+```{r}
+
+fit = lm(price ~ stars + borough, data = nyc_airbnb)
+broom::tidy(fit)
+
+``` 
+
+The difference now is that manhattan became the reference group and everythig else is being compared to it. 
+
