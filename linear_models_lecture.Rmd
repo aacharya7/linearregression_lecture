@@ -228,4 +228,19 @@ nyc_airbnb %>%
 It worked!
 
 
+## Cross Validation 
+
+In a model, we have to figure out what to fit and what to include. Best case is clear hypothesis and test in the context of known confounders. But, this is not usually the case. Usually, we have lots of predictors and have to decide what to include. 
+Nested model = take a predictor, add the next thing, the next thing etc. and can compare larger model to smaller model. Worries about multiple comparisons, p values aren't valued. 
+Non-nested model = you don't have statistical tests. Goodness of fit? 
+Goal for cross validation: will model be good for future dataset? 
+- will model generalize to future dataset?
+- can i take a model generated on one dataset and make accurate predictions about another dataset? 
+- need to balance underfitting and overfitting
+- we want low prediction errors
+Training data is data you use to build your model and testing data is data you use to evaluate out of sample fit 
+80 training, 20 testing
+
+
+
 
