@@ -4,27 +4,25 @@ author: "Ayeshra Acharya"
 date: "11/23/2020"
 output: html_document
 ---
+## Cross Validation 
 
+In a model, we have to figure out what to fit and what to include. Best case is clear hypothesis and test in the context of known confounders. But, this is not usually the case. Usually, we have lots of predictors and have to decide what to include. 
+Nested model = take a predictor, add the next thing, the next thing etc. and can compare larger model to smaller model. Worries about multiple comparisons, p values aren't valued. 
+Non-nested model = you don't have statistical tests. Goodness of fit? 
+Goal for cross validation: will model be good for future dataset? 
+- will model generalize to future dataset?
+- can i take a model generated on one dataset and make accurate predictions about another dataset? 
+- need to balance underfitting and overfitting
+- we want low prediction errors
+Training data is data you use to build your model and testing data is data you use to evaluate out of sample fit 
+80 training, 20 testing
+Comparing models that you think are plausible in terms of their prediction accuracy. 
+- Can use cross validation to compare all kinds of different things
+- Tools for CV: add_predictions, add_residuals, rmse, crossv_mc
+Overarching goal: PICKING THE RIGHT DATA 
+
+Time to code!!
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
