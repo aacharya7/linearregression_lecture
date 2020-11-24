@@ -240,6 +240,10 @@ Goal for cross validation: will model be good for future dataset?
 - we want low prediction errors
 Training data is data you use to build your model and testing data is data you use to evaluate out of sample fit 
 80 training, 20 testing
+Comparing models that you think are plausible in terms of their prediction accuracy. 
+- Can use cross validation to compare all kinds of different things
+- Tools for CV: add_predictions, add_residuals, rmse, crossv_mc
+
 
 
 

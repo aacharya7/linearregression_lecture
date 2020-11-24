@@ -22,7 +22,14 @@ Comparing models that you think are plausible in terms of their prediction accur
 Overarching goal: PICKING THE RIGHT DATA 
 
 Time to code!!
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+
+## Cross validation -- by hand 
+Get training and testing datasets
+
+```{r}
+train_df = sample_n(nonlin_df,size = 80)
+test_df = anti_join(nonlin_df, train_df, by = "id")
 ```
+
+facet grid helps you separate into different plots. you have to write the thing you want to "facet" by. in this case, it would be model. 
 
