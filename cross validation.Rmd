@@ -2,7 +2,7 @@
 title: "Cross Validation"
 author: "Ayeshra Acharya"
 date: "11/23/2020"
-output: html_document
+output: github_document
 ---
 ## Cross Validation 
 
@@ -26,10 +26,7 @@ Time to code!!
 ## Cross validation -- by hand 
 Get training and testing datasets
 
-```{r}
-train_df = sample_n(nonlin_df,size = 80)
-test_df = anti_join(nonlin_df, train_df, by = "id")
-```
-
 facet grid helps you separate into different plots. you have to write the thing you want to "facet" by. in this case, it would be model. 
+
+smooth model did the best. 
 

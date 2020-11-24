@@ -4,6 +4,11 @@ author: "Ayeshra Acharya"
 date: "11/24/2020"
 output: github_document
 ---
+```{r setup, include = FALSE}
+library(tidyverse)
+library(modelr)
+library(p8105.datasets)
+```
 
 ## Bootstrapping 
 - Repeated sampling is important if you want to know something about population. Repeated sampling doesn't happen in reality. Repeated sampling CAN happen on a computer. O.o 
