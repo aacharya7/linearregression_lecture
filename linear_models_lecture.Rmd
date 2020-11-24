@@ -8,8 +8,56 @@ output: html_document
 Lm is linear models, glm for generalized lnear models
 Arguments include: formula, data
 Output is complex and kind of messy, use broom package!
+- Use broom after running LM 
 
+```{r setup, include = FALSE}
+library(tidyverse)
+library(p8105.datasets)
+knitr::opts_chunk$set(
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
+)
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+scale_colour_discrete = scale_color_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+set.seed(1)
+```
 ```{r}
-
+data("nyc_airbnb")
+nyc_airbnb = 
+  nyc_airbnb %>% 
+  mutate(stars = review_scores_location / 2) %>% 
+  rename(
+    borough = neighbourhood_group,
+    neighborhood = neighbourhood) %>% 
+  filter(borough != "Staten Island") %>% 
+  select(price, stars, borough, neighborhood, room_type)
 ```
 
+## Fit a model. We want to know what is the price of an an airbnb rental and how is it related to star (numeric predictor) and borough(categorical predictor). Fir some line that runs through stars and maybe different for each borough. 
+```{r}
+nyc_airbnb %>%
+  ggplot(aes(x = stars,y=price,color=borough)) + 
+  geom_point()
+```
+Let's fit the model we care about. Linear model relating price to starts to borough. 
+```{r}
+fit = lm(price ~ stars + borough, data = nyc_airbnb)
+```
+
+Let's look at the result.. If you look at the summary you get way more, R squared, residuals etc. You can also get coefficients of the fit. There has been useful stuff that R has produced using "fit", but it is not great. So we will use broom! 
+
+```{r}
+broom::glance(fit)
+```
+Here, we get the r-squared, we get p-value etc. This is some of the most relevant info. Global test p-value. 
+
+However, this below might be better. 
+```{r}
+broom::tidy(fit)
+``` 
