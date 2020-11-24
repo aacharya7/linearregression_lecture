@@ -1,0 +1,15 @@
+---
+title: "linear_models"
+author: "Ayeshra Acharya"
+date: "11/23/2020"
+output: html_document
+---
+
+Lm is linear models, glm for generalized lnear models
+Arguments include: formula, data
+Output is complex and kind of messy, use broom package!
+
+```{r}
+
+```
+
