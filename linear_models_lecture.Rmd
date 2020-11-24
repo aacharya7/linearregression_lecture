@@ -134,6 +134,22 @@ In Manhattan, as we get to higher star values, residuals get wider distributions
 Why does Queens have one outlier?? 
 Bronx doesn't have this issue 
 
+## Hypothesis Tests
+```{r}
+fit %>%
+  broom::tidy()
+``` 
+If we have categorical predictor, we want to know if categorical predictor as a whole is significant in my model. 
+
+What about the significance of borough? we can do f test or ANOVA. adding borough into one model to compare 
+```{r}
+fit_null = lm(price ~ stars, data = nyc_airbnb)
+fit_alt = lm(price ~ stars + borough, data = nyc_airbnb)
+
+anova(fit_null,fit_alt)
+broom::tidy()
+``` 
+
 
 
 
